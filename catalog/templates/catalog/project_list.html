@@ -1,0 +1,114 @@
+{% extends "base_generic.html" %}
+
+{% block content %}
+    {% if project_list %}
+
+        {% for project in project_list %}
+
+            <div class="row d-flex justify-content-center" style="margin-top:50px;">
+                <div class="card"  style="width: 750px">
+                    <div class="card-header " style="background-color: blue" >
+                        <div class="row">
+                            <div class="col-11 text-white " style="font-size: 25px;">
+                                 <a ><i class="fa fa-calendar" aria-hidden="true"></i>  {{project.name}}</a>
+                            </div>
+                                <!--<div class="col-1">
+                                    <button  class="btn btn-success" id="btn1" type="button" style="display: none;"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+                                </div>-->
+                                <div class="col-1 ">
+                                    <form method="post" action="{% url 'catalog:project' %}">
+                                        {% csrf_token %}
+                                        <button  class="btn btn-danger" id="btn2" name="deleteproject_{{ project.name }}" type="submit" style="display: none;"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                    </form>
+                                </div>
+                            </div>
+
+                            </div>
+
+                    <div class="card-header " style="background-color: beige" >
+                            <div class="row" >
+                                <div class="col-1">
+                                    <i class="fa fa-plus" aria-hidden="true" style="font-size:35px;color:green"></i>
+                                </div>
+                                <div class="col">
+
+                                        <form method="post" action="{% url 'catalog:project' %}">
+                                            {% csrf_token %}
+                                             <div class="input-group" >
+                                                    <input type="text" class="form-control" name="record_field_{{ project.name }}" placeholder="Start typng here to create a task..." aria-describedby="basic-addon2">
+                                                    <div class="input-group-append">
+                                                        <button class="btn btn-success" type="submit">Add Task</button>
+                                                      </div>
+
+                                              </div>
+                                        </form>
+                                </div>
+                        </div>
+                    </div>
+
+                            {% for record in record_list %}
+                                {% if project == record.project %}
+                                    <div class="card-header" id="record" style="background-color: white">
+                                        <div class="row">
+                                            <div class="col-1 text-center" style="" >
+                                            <form method="POST" action="{% url 'catalog:project' %}" id="form_check">
+                                                    {% csrf_token %}
+                                                    <input type="checkbox" class="form-check-input" onChange="this.form.submit()" name="checkbox_{{ project.name }}_{{ record.text }}" {% if record.status == 1 %}checked="checked"{% endif %}>
+                                            </form>
+                                            </div>
+                                            <div class="col-10 border-left border-right">{{ record }}</div>
+                                            <div class="col-1">
+                                                <form method="post" action="{% url 'catalog:project' %}">
+                                                    {% csrf_token %}
+                                                    <div class="btn-group" role="group">
+                                                            <!--<button  class="btn btn-success" id="btn1_record" name="addrecord_{{ project.name }}_{{ record.text }}" type="submit" style="display: none;"><i class="fa fa-pencil" aria-hidden="true"></i></button>-->
+                                                            <button  class="btn btn-danger" id="btn2_record" name="deleterecord_{{ project.name }}_{{ record.text }}" type="submit" style="display: none;"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+                                                        </div>
+                                                </form>
+                                            </div>
+
+
+                                        </div>
+
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+
+
+
+
+                </div>
+            </div>
+            <script>
+
+                $(document).ready(function () {
+                    $(document).on('mouseenter', '.card', function () {
+                        $(this).find("#btn1").show();
+                        $(this).find("#btn2").show();
+                    }).on('mouseleave', '.card', function () {
+                        $(this).find("#btn1").hide();
+                        $(this).find("#btn2").hide();
+                    });
+
+
+                });
+                $(document).ready(function () {
+                    $(document).on('mouseenter', '#record', function () {
+                        $(this).find("#btn1_record").show();
+                        $(this).find("#btn2_record").show();
+                        $(this).find("#btn_arrow1").show();
+                        $(this).find("#btn_arrow2").show();
+                        $(this).css('background-color', 'gainsboro');
+                    }).on('mouseleave', '#record', function () {
+                        $(this).find("#btn1_record").hide();
+                        $(this).find("#btn2_record").hide();
+                        $(this).find("#btn_arrow1").hide();
+                        $(this).find("#btn_arrow2").hide();
+                        $(this).css('background-color', 'white');
+                    });
+                });
+            </script>
+
+        {% endfor %}
+    {% endif %}
+{% endblock %}
